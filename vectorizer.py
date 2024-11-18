@@ -20,6 +20,8 @@ from transformers import (
     T5Tokenizer,
 )
 
+from config import ST_LOCAL_FILES_ONLY
+
 
 # limit transformer batch size to limit parallel inference, otherwise we run
 # into memory problems
@@ -96,6 +98,7 @@ class SentenceTransformerVectorizer:
             cache_folder=model_path,
             device=self.get_device(),
             trust_remote_code=trust_remote_code,
+            local_files_only=ST_LOCAL_FILES_ONLY,
         )
         self.model.eval()  # make sure we're in inference mode, not training
 
@@ -258,7 +261,6 @@ class HuggingFaceVectorizer:
 
 
 class HFModel:
-
     def __init__(self, cuda_support: bool, cuda_core: str, trust_remote_code: bool):
         super().__init__()
         self.model = None
@@ -331,7 +333,6 @@ class HFModel:
 
 
 class DPRModel(HFModel):
-
     def __init__(
         self,
         architecture: str,
@@ -364,7 +365,6 @@ class DPRModel(HFModel):
 
 
 class T5Model(HFModel):
-
     def __init__(self, cuda_support: bool, cuda_core: str, trust_remote_code: bool):
         super().__init__(cuda_support, cuda_core)
         self.model = None
@@ -406,7 +406,6 @@ class T5Model(HFModel):
 
 
 class ModelFactory:
-
     @staticmethod
     def model(
         model_type,
